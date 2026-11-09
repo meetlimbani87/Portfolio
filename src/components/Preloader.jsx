@@ -9,6 +9,7 @@ export default function Preloader({ onDone }) {
   const root = useRef(null)
   const numOutline = useRef(null)
   const numFill = useRef(null)
+  const status = useRef(null)
   // keep the latest callback in a ref so a parent re-render never restarts the intro
   const doneRef = useRef(onDone)
   doneRef.current = onDone
@@ -31,6 +32,7 @@ export default function Preloader({ onDone }) {
           root.current.style.setProperty('--p', p.toFixed(2))
           numOutline.current.textContent = txt
           numFill.current.textContent = txt
+          status.current.textContent = p < 40 ? 'Loading' : p < 80 ? 'Building the scene' : 'Almost there'
           // cube first, then the two rings follow it while the counter is still running
           const q = p / 100
           const seg = (a, b) => Math.min(1, Math.max(0, (q - a) / (b - a)))
@@ -61,11 +63,15 @@ export default function Preloader({ onDone }) {
   return (
     <div className="preloader" ref={root}>
       <div className="pre-ui">
-        <span className="eyebrow pre-label">Meet Limbani — Portfolio</span>
+        <div className="pre-top">
+          <span className="eyebrow pre-label">Meet Limbani — Portfolio</span>
+          <span className="eyebrow pre-status" ref={status}>Loading</span>
+        </div>
         <div className="pre-count" aria-hidden="true">
           <span className="pre-outline" ref={numOutline}>000</span>
           <span className="pre-fill" ref={numFill}>000</span>
         </div>
+        <div className="pre-bar" aria-hidden="true"><i /></div>
       </div>
     </div>
   )

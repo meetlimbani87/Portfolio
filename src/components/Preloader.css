@@ -5,17 +5,33 @@
 }
 
 .pre-ui {
-  position: absolute; inset: 0; padding: 6vw;
-  display: flex; flex-direction: column; justify-content: space-between;
+  position: absolute; inset: 0;
+  padding: clamp(1.25rem, 6vw, 4rem) 6vw clamp(1.25rem, 5vw, 3.5rem);
+  display: flex; flex-direction: column; justify-content: space-between; gap: 1.5rem;
 }
+.pre-top { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+.pre-status { color: var(--accent); white-space: nowrap; }
+.pre-status::after { content: ''; display: inline-block; width: .4em; height: .4em; margin-left: .6em; border-radius: 50%; background: var(--accent); animation: pre-pulse 1s ease-in-out infinite; }
+@keyframes pre-pulse { 50% { opacity: .15; transform: scale(.6); } }
 
 /* bottom counter: outline always visible, solid fill rises with progress */
 .pre-count {
-  position: relative; align-self: flex-start; display: grid;
+  position: relative; align-self: flex-start; display: grid; margin-top: auto;
   font-family: var(--font-display); font-weight: 700;
-  font-size: clamp(5rem, 20vw, 18rem); line-height: .8; letter-spacing: -0.04em;
+  font-size: clamp(4.5rem, 24vw, 18rem); line-height: .8; letter-spacing: -0.04em;
   font-variant-numeric: tabular-nums;
 }
 .pre-count > span { grid-area: 1 / 1; }
 .pre-outline { color: transparent; -webkit-text-stroke: 2px var(--fg); }
 .pre-fill { color: var(--fg); clip-path: inset(calc(100% - var(--p) * 1%) 0 0 0); }
+
+/* thin progress line under the counter */
+.pre-bar { height: 2px; background: var(--line); overflow: hidden; }
+.pre-bar i { display: block; height: 100%; background: var(--accent); transform: scaleX(calc(var(--p) / 100)); transform-origin: left; }
+
+@media (max-width: 600px) {
+  .pre-outline { -webkit-text-stroke-width: 1.2px; }
+}
+@media (max-height: 520px) and (orientation: landscape) {
+  .pre-count { font-size: clamp(3rem, 30vh, 9rem); }
+}

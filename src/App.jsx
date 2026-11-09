@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect, useState } from 'react'
 import { initSmoothScroll } from './lib/smoothScroll'
+import StageBoundary from './components/StageBoundary'
 import Preloader from './components/Preloader'
 import Cursor from './components/Cursor'
 import Nav from './components/Nav'
@@ -25,7 +26,7 @@ export default function App() {
       <Cursor />
       <Nav ready={ready} />
       <div className="stage">
-        <Suspense fallback={null}><Stage /></Suspense>
+        <StageBoundary><Suspense fallback={null}><Stage /></Suspense></StageBoundary>
         <div className="stage-dim" />
         <div className="stage-vignette" />
         <div className="stage-grain" />
