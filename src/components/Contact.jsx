@@ -3,9 +3,8 @@ import gsap from 'gsap'
 import { useReveal } from '../lib/useReveal'
 
 const socials = [
-  { label: 'GitHub', href: '#' },
-  { label: 'LinkedIn', href: '#' },
-  { label: 'Twitter / X', href: '#' },
+  { label: 'GitHub', href: 'https://github.com/meetlimbani87' },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/meet-limbani87' },
 ]
 
 export default function Contact() {

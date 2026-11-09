@@ -20,6 +20,7 @@ function FocusPanel({ project: p, onClose }) {
     const el = panel.current
     if (!el) return
     const onWheel = (e) => {
+      // scrolling up with nothing left to scroll up to (the top of the text, or over the picture) goes back to the stack
       const text = el.querySelector('.focus-text')
       const inText = text && text.contains(e.target)
       const canScroll = inText && text.scrollHeight > text.clientHeight + 1
@@ -27,10 +28,11 @@ function FocusPanel({ project: p, onClose }) {
       const atBottom = text && text.scrollTop + text.clientHeight >= text.scrollHeight - 1
       if (canScroll && !((e.deltaY < 0 && atTop) || (e.deltaY > 0 && atBottom))) return // let the text scroll
       e.preventDefault()
+      if (e.deltaY < 0) onClose()
     }
     el.addEventListener('wheel', onWheel, { passive: false })
     return () => el.removeEventListener('wheel', onWheel)
-  }, [])
+  }, [onClose])
   useEffect(() => {
     if (!zoom) return
     const onKey = (e) => {
@@ -46,6 +48,7 @@ function FocusPanel({ project: p, onClose }) {
     <div className={'focus-panel' + (n ? '' : ' no-shots')} ref={panel} data-lenis-prevent>
       <button type="button" className="focus-close" onClick={onClose} aria-label="Close summary" data-magnetic>✕</button>
       <div className="focus-text">
+        {p.badges && <div className="focus-badges">{p.badges.map((b) => <span key={b}>{b}</span>)}</div>}
         <span className="eyebrow">{p.tag}</span>
         <h3>{p.title}</h3>
         {p.summary.map((t, i) => <p key={i}>{t}</p>)}

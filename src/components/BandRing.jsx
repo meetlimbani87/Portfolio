@@ -21,6 +21,7 @@ const limeHDR = LIME.clone().multiplyScalar(2.2)
 const DULL = new THREE.Color(0.34, 0.27, 0.21) // the bland, unlit look of a ring that is not selected
 const clamp01 = (x) => Math.min(1, Math.max(0, x))
 const smooth = (x) => { x = clamp01(x); return x * x * (3 - 2 * x) }
+const smoother = (x) => { x = clamp01(x); return x * x * x * (x * (x * 6 - 15) + 10) } // smootherstep: gentler start and finish than smooth
 const ease = (x) => 1 - Math.pow(1 - clamp01(x), 3)
 // In the line-up every ring lies flat like a hoop, leaning back toward you: its name runs along the front rim, so it
 // reads left to right and scrolls past as the ring spins, and you can still see into the opening.
@@ -93,9 +94,9 @@ export default function BandRing({ k, i, hero = false, tilt = [0, 0, 0], speed =
     const a = Math.abs(rel)
     const tt = smooth(a)
     const slot = Math.max(a - 1, 0)
-    const lx = Math.sign(rel) * (LINE.sideX0 + LINE.sideDX * slot) * tt
+    const lx = Math.sign(rel) * (Math.max(scrollState.halfW + LINE.sideEdge, LINE.focusR * 2 + 0.6) + LINE.sideDX * slot) * tt
     const ly = LINE.focusY + (LINE.sideY - LINE.focusY) * tt
-    const f = smooth(stack.fv * 1.5 - 0.1 * a)
+    const f = smoother(stack.fv * 1.2 - 0.08 * a) // a hair of stagger by distance, and a gentle ease at both ends
     o.quaternion.slerp(LINE_Q, f)
     // only three rings are sharp (the raised one and one either side); the next one out on each side is pushed back so it
     // falls out of focus (the scene blurs by depth), and anything further out is gone

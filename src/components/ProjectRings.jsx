@@ -30,8 +30,8 @@ export default function ProjectRings() {
     if (scrollState.focus >= 0) stack.fi = scrollState.focus
     // the raised ring as a smooth number: it jumps there while the line-up is closed, and slides when you switch rings
     if (stack.fv < 0.02) stack.ff = stack.fi
-    else stack.ff += (stack.fi - stack.ff) * (1 - Math.exp(-5 * dt))
-    stack.fv += ((scrollState.focus >= 0 ? 1 : 0) - stack.fv) * (1 - Math.exp(-5 * dt))
+    else stack.ff += (stack.fi - stack.ff) * (1 - Math.exp(-3.5 * dt))
+    stack.fv += ((scrollState.focus >= 0 ? 1 : 0) - stack.fv) * (1 - Math.exp(-3 * dt)) // slower, so the move reads as one smooth glide
     const t = clock.elapsedTime
 
     d.step(dt) // coasts to a stop after letting go

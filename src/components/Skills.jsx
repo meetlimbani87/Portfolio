@@ -1,12 +1,11 @@
 import { useRef } from 'react'
 import { useReveal } from '../lib/useReveal'
 
-const marquee = ['React', 'JavaScript', 'Node.js', 'GSAP', 'Three.js', 'CSS', 'Git', 'Figma']
+const marquee = ['React', 'JavaScript', 'C#', 'Python', 'SQL', 'n8n', 'HTML', 'CSS', 'Git', 'VS Code']
 const groups = [
-  { title: 'Frontend', items: ['React', 'JavaScript', 'HTML/CSS'] },
-  { title: 'Motion & 3D', items: ['GSAP', 'Three.js', 'Framer Motion'] },
-  { title: 'Backend', items: ['Node.js', 'Databases', 'APIs'] },
-  { title: 'Tools', items: ['Git', 'Figma', 'VS Code'] },
+  { title: 'Languages', items: ['JavaScript', 'C#', 'Python', 'SQL'] },
+  { title: 'Frontend', items: ['React', 'HTML', 'CSS'] },
+  { title: 'Tools', items: ['Git', 'VS Code', 'n8n'] },
 ]
 
 export default function Skills() {

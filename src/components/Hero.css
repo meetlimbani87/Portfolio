@@ -33,7 +33,7 @@
 .role-label { color: var(--muted); }
 .role-window { display: inline-block; height: 1.3em; overflow: hidden; }
 .role-track { display: flex; flex-direction: column; }
-.role-track span { height: 1.3em; line-height: 1.3em; color: var(--accent); font-family: var(--font-display); font-weight: 500; }
+.role-track span { white-space: nowrap; height: 1.3em; line-height: 1.3em; color: var(--accent); font-family: var(--font-display); font-weight: 500; }
 
 .hero-scroll { display: flex; align-items: center; gap: .8rem; }
 .scroll-line { width: 1px; height: 48px; background: var(--line); position: relative; overflow: hidden; }

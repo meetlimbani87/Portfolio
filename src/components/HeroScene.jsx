@@ -1,7 +1,7 @@
 import { Suspense, useEffect, useMemo, useRef } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { Environment, RoundedBox, Line } from '@react-three/drei'
-import { EffectComposer, Bloom, ToneMapping, DepthOfField } from '@react-three/postprocessing'
+import { EffectComposer, Bloom, ToneMapping } from '@react-three/postprocessing'
 import { ToneMappingMode } from 'postprocessing'
 import * as THREE from 'three'
 import { intro } from '../lib/intro'
@@ -10,7 +10,6 @@ import { knotTexture, weatheredTexture } from '../lib/glyphs'
 import { scrollState, updateScrollState } from '../lib/scrollState'
 import ProjectRings from './ProjectRings'
 import BandRing from './BandRing'
-import { stack } from '../lib/heroRings'
 import { useDragTurn } from '../lib/dragTurn'
 
 /* This file is the whole 3D stage. It lives in ONE fixed, full-screen canvas behind the page:
@@ -224,14 +223,6 @@ const ORBIT_B_SLOTS = orbitSlots(1, 1.3)
 const canTurnHero = () => scrollState.hero < 0.3
 const heroDragQ = new THREE.Quaternion(), tmpQ = new THREE.Quaternion()
 
-// Depth of field that only switches on in the project line-up: the raised ring and its two neighbours are in focus and
-// the pushed-back rings behind them are blurred. It fades in and out with the line-up.
-function FocusBlur() {
-  const fx = useRef()
-  useFrame(() => { if (fx.current) fx.current.bokehScale = 4 * stack.fv })
-  return <DepthOfField ref={fx} worldFocusDistance={9.5} worldFocusRange={2.2} bokehScale={0} />
-}
-
 function Rig() {
   const drag = useDragTurn(canTurnHero)
   const root = useRef()
@@ -263,6 +254,7 @@ function Rig() {
     const h = smooth(scrollState.hero)
     // in the Projects section the spinning world is the star of the screen, so it swells a touch
     root.current.scale.setScalar(fit * (1 - 0.12 * h) * (1 + 0.1 * scrollState.act))
+    scrollState.halfW = W0 / 2 / root.current.scale.x
     root.current.position.x = wide ? W0 * 0.05 * (1 - h) : 0
     root.current.position.y = Math.sin(t * 0.8) * 0.1 * fit + (wide ? 0 : -H0 * (portrait ? 0.14 : 0.06) * (1 - h))
     // the pointer tilts the world, but not in the Projects section, where it holds still. In the constellation
@@ -372,7 +364,6 @@ export default function Stage() {
       <Particles />
       <Environment preset="city" environmentIntensity={0.7} />
       <EffectComposer multisampling={mobile ? 0 : 4}>
-        <FocusBlur />
         <Bloom mipmapBlur intensity={0.8} luminanceThreshold={1} luminanceSmoothing={0.15} />
         <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
       </EffectComposer>

@@ -6,6 +6,7 @@
 // highlights: three short points about what is worth knowing (keep each to about one line)
 // stack:      the main technologies (up to six or so)
 // images:     files under /public (a gallery; each one is shown at full size, so keep them sharp, 1280px wide or more)
+// badges:     short labels shown above the title (e.g. Shipped, live user numbers)
 // live / repo: optional links (repo only when it is public: private repos would 404 for visitors)
 // The write-ups come from the live sites and from reading each project's code.
 export const PROJECTS = [
@@ -46,6 +47,7 @@ export const PROJECTS = [
       'Express API with JWT auth and rate limiting, Prisma migrations',
     ],
     stack: ['React', 'TypeScript', 'Vite', 'Node.js', 'Prisma', 'PostgreSQL'],
+    badges: ['Shipped', 'AI-augmented delivery'],
     live: 'https://tree-design.vercel.app',
     repo: null, // private repository
     images: [
@@ -61,9 +63,9 @@ export const PROJECTS = [
   {
     title: 'Expert HairArts',
     tag: 'Next.js · Full-stack · Hair atelier',
-    desc: 'Website and booking for a hair atelier in Ahmedabad: services, festive offers, a product shelf, a gallery and appointment requests, with a backend behind it.',
+    desc: 'Live with 300+ users: website and booking for a hair atelier in Ahmedabad: services, festive offers, a product shelf, a gallery and appointment requests, with a full backend and admin panel.',
     summary: [
-      'Website and booking system for an established hair atelier in Ahmedabad: an honest price menu, offers, a gallery, and a six-step booking flow, backed by its own API and an admin panel for the salon.',
+      'Website and booking system for an established hair atelier in Ahmedabad, live with 300+ users: an honest price menu, offers, a gallery, and a six-step booking flow, backed by its own API and an admin panel for the salon.',
     ],
     highlights: [
       'Booking wizard with per-stylist schedules and a server-side conflict check',
@@ -71,6 +73,7 @@ export const PROJECTS = [
       'Reminder and review-request emails sent by a background scheduler',
     ],
     stack: ['Next.js', 'TypeScript', 'Express', 'Drizzle ORM', 'PostgreSQL', 'Cloudinary'],
+    badges: ['Shipped', '300+ live users', 'AI-augmented delivery'],
     live: 'https://expert-hair-arts.vercel.app',
     repo: null, // private repository
     images: [

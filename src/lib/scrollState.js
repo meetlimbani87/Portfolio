@@ -30,6 +30,7 @@ export const scrollState = {
   layout: initialLayout(),
   focus: -1,      // the project ring that was double-clicked and is raised with its summary (-1 = none)
   hoverNode: null, // constellation: index of the node under the pointer
+  halfW: 7,       // half the visible width in the rings' own units (written by the scene); the row's neighbours sit at the edge
   fit: 1,         // world-scale of the hero rig (written by the scene)
   heroHide: 0,    // 0..1: 1 once the hero's own two rings are swapped for the project rings (written by the 'rings' layout)
   ringGate: 0,    // 0..1: how far the project rings have peeled out of the hero rings (straight from scroll)

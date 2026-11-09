@@ -2,7 +2,7 @@ import { useLayoutEffect, useRef } from 'react'
 import gsap from 'gsap'
 import './Hero.css'
 
-const roles = ['Creative Developer', 'Interaction Designer', 'Motion Nerd']
+const roles = ['Full-Stack Developer', 'Workflow Automator', 'Builder who decides, AI assists']
 
 // split a string into per-character spans (spaces preserved)
 const Chars = ({ text }) =>
@@ -52,7 +52,7 @@ export default function Hero({ ready }) {
       // role ticker
       const tl = gsap.timeline({ repeat: -1, delay: 1.6 })
       roles.forEach((_, i) => {
-        tl.to('.role-track', { yPercent: -(100 / roles.length) * (i + 1), duration: 0.7, ease: 'expo.inOut' }, '+=1.6')
+        tl.to('.role-track', { yPercent: -(100 / (roles.length + 1)) * (i + 1), duration: 0.7, ease: 'expo.inOut' }, '+=1.6')
       })
       tl.set('.role-track', { yPercent: 0 })
 
@@ -93,7 +93,7 @@ export default function Hero({ ready }) {
             <span className="role-label">I'm a</span>
             <span className="role-window">
               <span className="role-track">
-                {roles.map((r) => <span key={r}>{r}</span>)}
+                {[...roles, roles[0]].map((r, i) => <span key={i}>{r}</span>)}
               </span>
             </span>
           </div>

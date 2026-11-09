@@ -27,12 +27,12 @@ export const AXIS_Q = new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.P
 // The line-up when a ring is double-clicked: the chosen ring rises to the middle and the rings before it sit to its
 // left and the rings after it to its right, smaller, all still spinning and all turned so their names can be read.
 export const LINE = {
-  focusR: 1.25,  // how wide the raised ring is
-  focusY: 2.75,  // height of the raised ring (the top of the screen is about 3.4)
-  sideR: 0.95,   // how wide the others are
-  sideY: 3.05,   // height of the others: a row along the very top, so they can run off the edge
-  sideX0: 3.0,   // distance of the nearest side ring from the middle
-  sideDX: 2.1,   // spacing between side rings
-  backZ: -2.6,   // how far the second ring out on each side is pushed back, so it is out of focus
+  focusR: 2.8,   // the raised ring is its full stack size
+  focusY: 3.0,   // height of the row: it runs off the top of the screen a little (the top edge is about 3.4)
+  sideR: 2.8,    // the neighbours are the same size
+  sideY: 3.0,    // ...and sit in the same row
+  sideEdge: 0.4, // the nearest neighbour is centred this far past the screen edge, so less than half of it shows (with a gap after the raised ring)
+  sideDX: 5.4,   // spacing of the next ones out (those run off the screen)
+  backZ: 0,      // no depth push: nothing is blurred any more
   tilt: 0.32,    // how far the rings lean back toward you: low = flatter, seen more from the side
 }

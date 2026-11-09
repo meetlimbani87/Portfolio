@@ -126,18 +126,18 @@ h2, h3 { font-family: var(--font-display); font-weight: 700; letter-spacing: -0.
 .project-list, .projects-title, .project-meta { transition: opacity .45s; }
 .focus-panel {
   position: absolute; left: 50%; bottom: 5vh; transform: translateX(-50%); z-index: 4;
-  width: min(82rem, 94vw); height: auto; max-height: calc(100vh - 7rem); align-items: center; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); gap: 1.8rem;
-  padding: 1.5rem 1.7rem; border: 1px solid rgba(198,255,61,.25); border-radius: 18px;
+  width: min(96rem, 96vw); height: auto; max-height: calc(100vh - 9.5rem); align-items: center; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); grid-template-rows: minmax(0, 1fr); gap: 1.8rem;
+  padding: 2rem 2.2rem; border: 1px solid rgba(198,255,61,.25); border-radius: 18px;
   background: rgba(8,10,6,.78); backdrop-filter: blur(12px);
   animation: focus-up .7s cubic-bezier(.2,.7,.2,1) both;
 }
 .focus-panel.no-shots { grid-template-columns: minmax(0, 1fr); width: min(44rem, 90vw); }
 .focus-panel, .focus-text { overscroll-behavior: contain; }
 .focus-text { display: grid; gap: .85rem; align-content: start; overflow-y: auto; padding-right: .6rem; min-height: 0; scrollbar-width: thin; scrollbar-color: rgba(198,255,61,.4) transparent; }
-.focus-text h3 { font-size: clamp(2rem, 3.4vw, 3.2rem); line-height: 1; letter-spacing: -.03em; }
-.focus-text p { color: rgba(242,240,234,.9); font-size: 1.15rem; line-height: 1.6; }
+.focus-text h3 { font-size: clamp(2.2rem, 4vw, 4rem); line-height: 1; letter-spacing: -.03em; }
+.focus-text p { color: rgba(242,240,234,.9); font-size: clamp(1.1rem, 1.35vw, 1.4rem); line-height: 1.6; }
 .focus-points { display: grid; gap: .4rem; list-style: none; padding: 0; margin: .2rem 0; }
-.focus-points li { position: relative; padding-left: 1.1rem; color: rgba(242,240,234,.85); font-size: 1.04rem; line-height: 1.55; }
+.focus-points li { position: relative; padding-left: 1.1rem; color: rgba(242,240,234,.85); font-size: clamp(1rem, 1.2vw, 1.2rem); line-height: 1.55; }
 .focus-points li::before { content: ''; position: absolute; left: 0; top: .55em; width: .4rem; height: .4rem; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent); }
 .focus-stack { display: flex; flex-wrap: wrap; gap: .4rem; }
 .focus-stack span { padding: .25rem .65rem; border: 1px solid rgba(255,255,255,.16); border-radius: 999px; font-size: .72rem; letter-spacing: .04em; color: rgba(242,240,234,.8); }
@@ -236,3 +236,8 @@ h2, h3 { font-family: var(--font-display); font-weight: 700; letter-spacing: -0.
   .projects-inner { padding-top: 14vh; }
   .project-meta { bottom: 4vh; }
 }
+
+.about-note { color: var(--muted); font-size: 1.05rem; max-width: 46ch; margin: -3rem 0 4rem; }
+.focus-badges { display: flex; flex-wrap: wrap; gap: .4rem; }
+.focus-badges span { padding: .22rem .7rem; border-radius: 999px; background: var(--accent); color: #0a0a0c; font-size: .68rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+@media (max-width: 900px) { .about-note { margin: -1.5rem 0 2.5rem; } }

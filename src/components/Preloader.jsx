@@ -27,6 +27,7 @@ export default function Preloader({ onDone }) {
         duration: 3.2,
         ease: 'power2.inOut',
         onUpdate: () => {
+          if (!root.current || !numOutline.current || !numFill.current || !status.current) return // e.g. after a hot reload
           const p = state.p
           const txt = String(Math.round(p)).padStart(3, '0')
           root.current.style.setProperty('--p', p.toFixed(2))
