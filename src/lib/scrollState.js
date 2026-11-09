@@ -50,6 +50,7 @@ export const onFocus = (fn) => { focusers.add(fn); return () => focusers.delete(
 export const setFocus = (i) => {
   if (scrollState.focus === i) return
   scrollState.focus = i
+  scrollState.hoverNode = null // the rings are about to move: nothing is under the pointer any more
   focusers.forEach((fn) => fn(i))
 }
 

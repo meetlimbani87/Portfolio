@@ -1,12 +1,16 @@
 import { useRef } from 'react'
 import { useReveal } from '../lib/useReveal'
 
-const marquee = ['React', 'JavaScript', 'C#', 'Python', 'SQL', 'n8n', 'HTML', 'CSS', 'Git', 'VS Code']
+const marquee = ['React', 'JavaScript', 'C#', 'Python', 'SQL', 'n8n', 'HTML', 'CSS', 'Git', 'VS Code', 'Supabase', 'Vercel', 'Render', 'Excel', 'Power BI']
 const groups = [
   { title: 'Languages', items: ['JavaScript', 'C#', 'Python', 'SQL'] },
   { title: 'Frontend', items: ['React', 'HTML', 'CSS'] },
   { title: 'Tools', items: ['Git', 'VS Code', 'n8n'] },
+  { title: 'Data & hosting', items: ['Supabase', 'Vercel', 'Render'] },
 ]
+
+// what has been learned so far for data analytics
+const analytics = ['Excel', 'Power BI', 'SQL', 'Python']
 
 export default function Skills() {
   const ref = useRef(null)
@@ -27,6 +31,12 @@ export default function Skills() {
             <ul>{g.items.map((i) => <li key={i}>{i}</li>)}</ul>
           </div>
         ))}
+      </div>
+      <div className="learning" data-reveal>
+        <span className="eyebrow">Currently learning</span>
+        <h3>Data Analytics</h3>
+        <p>What I've learned so far:</p>
+        <ul>{analytics.map((t) => <li key={t}>{t}</li>)}</ul>
       </div>
     </section>
   )

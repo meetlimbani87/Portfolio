@@ -107,19 +107,24 @@ export const PROJECTS = [
   {
     title: 'InstaSales AI',
     tag: 'AI · Instagram sales assistant',
-    desc: 'An AI sales assistant for Instagram businesses: it handles customer conversations, tracks leads and runs reel automations from one dashboard.',
+    desc: 'An AI sales assistant for Instagram DMs: it answers routine questions from your real catalogue, hands important chats to a person, and keeps every lead in one pipeline.',
     summary: [
-      'An AI sales assistant for businesses that sell on Instagram: it answers customer messages, tracks leads and runs reel automations, so the owner works from one dashboard instead of the inbox.',
+      'An AI sales assistant for businesses that sell over Instagram DMs. It answers routine questions from the shop’s real product catalogue, spots the customers ready to buy, and hands the important chats to the team with a summary, so every lead ends up in one organised pipeline.',
     ],
     highlights: [
-      'Lead snapshot and open pipeline with a value for each deal',
-      'Overview of how much of the conversation load the AI handles',
-      'Buying-intent overview and reel automations',
+      'Quotes only prices the owner approves; discounts, bulk orders and complaints go to a person',
+      'Every AI reply is checked on the server, capped at 12 per chat per hour',
+      'Tokens encrypted at rest (AES-256-GCM); webhooks verified with HMAC SHA-256',
     ],
     stack: ['AI assistant', 'Instagram', 'Web dashboard'],
     live: 'https://ig-sales-assistant.vercel.app',
     repo: null, // private repository
-    images: [], // the dashboard shows a real account, so no screenshot is published
+    images: [
+      '/projects/instasales-ai/home.jpg',
+      '/projects/instasales-ai/features.jpg',
+      '/projects/instasales-ai/how-it-works.jpg',
+      '/projects/instasales-ai/safety.jpg',
+    ], // the public landing page (its chats are the site's own demo data), not the logged-in dashboard
   },
   {
     title: 'Spring Auth App',

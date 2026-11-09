@@ -32,6 +32,10 @@ export default function ProjectRings() {
     if (stack.fv < 0.02) stack.ff = stack.fi
     else stack.ff += (stack.fi - stack.ff) * (1 - Math.exp(-3.5 * dt))
     stack.fv += ((scrollState.focus >= 0 ? 1 : 0) - stack.fv) * (1 - Math.exp(-3 * dt)) // slower, so the move reads as one smooth glide
+    // While the rings glide between the stack and the row they move out from under a pointer that is standing still,
+    // and the browser never reports that (no pointer-out), which left a ring lit green and enlarged. So while they move
+    // nothing counts as hovered; the next real pointer movement lights whatever is under it.
+    if (stack.fv > 0.02 && stack.fv < 0.98) scrollState.hoverNode = null
     const t = clock.elapsedTime
 
     d.step(dt) // coasts to a stop after letting go

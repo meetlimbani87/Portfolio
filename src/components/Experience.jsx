@@ -3,8 +3,8 @@ import gsap from 'gsap'
 import { useReveal } from '../lib/useReveal'
 
 const items = [
-  { when: '3 months', role: 'Full-Stack & Automation Intern', where: 'VedLogic', desc: 'Building automations with n8n and shipping features in React and C#.' },
   { when: '3 months', role: 'Intern', where: 'Infividhya', desc: 'Worked on React and Python.' },
+  { when: '3 months', role: 'Full-Stack & Automation Intern', where: 'VedLogic', desc: 'Building automations with n8n and shipping features in React and C#.' },
   { when: 'Graduating 2027', role: 'Bachelor of Engineering — Computer Science', where: 'LDRP-ITR', desc: 'BE CE, in progress.' },
 ]
 

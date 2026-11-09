@@ -96,17 +96,18 @@ export default function BandRing({ k, i, hero = false, tilt = [0, 0, 0], speed =
     const slot = Math.max(a - 1, 0)
     const lx = Math.sign(rel) * (Math.max(scrollState.halfW + LINE.sideEdge, LINE.focusR * 2 + 0.6) + LINE.sideDX * slot) * tt
     const ly = LINE.focusY + (LINE.sideY - LINE.focusY) * tt
-    const f = smoother(stack.fv * 1.2 - 0.08 * a) // a hair of stagger by distance, and a gentle ease at both ends
+    const f = smoother(stack.fv) // every ring moves in step (no stagger by distance, which made the far rings finish early on the way back), with a gentle ease at both ends
     o.quaternion.slerp(LINE_Q, f)
     // only three rings are sharp (the raised one and one either side); the next one out on each side is pushed back so it
     // falls out of focus (the scene blurs by depth), and anything further out is gone
     const back = LINE.backZ * smooth(a - 1)
     const gone = 1 - smooth((a - 2.1) / 0.7)
     o.position.set(_p.x + (lx - _p.x) * f, _p.y + (ly - _p.y) * f, _p.z * (1 - f) + back * f)
-    if (f > 0.001 && gone < 0.01) o.visible = false
     const wide = LINE.focusR + (LINE.sideR - LINE.focusR) * tt
     const lineScale = (1 + (wide / STACK_R - 1) * f) * (1 - f * (1 - gone))
-    o.scale.setScalar(Math.max(ease(v) * (1 + (STACK_R / R - 1) * e) * lineScale * (1 + 0.08 * hov.current), 0.0001))
+    const size = ease(v) * (1 + (STACK_R / R - 1) * e) * lineScale * (1 + 0.08 * hov.current)
+    o.scale.setScalar(Math.max(size, 0.0001))
+    if (!hero && size < 0.01) o.visible = false // only once it has shrunk to nothing; it reappears as soon as it starts to grow
 
     // spins at its hero speed, slowing to a readable crawl on the chosen ring
     spin.current.rotation.y += dt * (speed * (1 - e) + dir * (0.5 - 0.38 * sel.current) * e)

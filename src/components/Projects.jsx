@@ -172,7 +172,7 @@ export default function Projects() {
           ))}
         </ul>
 
-        <div className="project-meta" key={shown}>
+        <div className="project-meta" key={`meta-${shown}`}>
           <span className="eyebrow">{p.tag}</span>
           <h3>{p.title}</h3>
           <p>{p.desc}</p>
@@ -182,7 +182,7 @@ export default function Projects() {
           </div>
         </div>
 
-        {focus >= 0 && <FocusPanel key={focus} project={PROJECTS[focus]} onClose={() => setFocus(-1)} />}
+        {focus >= 0 && <FocusPanel key={`panel-${focus}`} project={PROJECTS[focus]} onClose={() => setFocus(-1)} />}
 
         <span className="projects-count">{pad(shown + 1)} / {pad(PROJECTS.length)}</span>
       </div>
