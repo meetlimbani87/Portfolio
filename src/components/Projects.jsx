@@ -163,6 +163,7 @@ export default function Projects() {
                 onFocus={() => setHover(i)}
                 onBlur={() => setHover(null)}
                 onClick={() => jumpTo(i)}
+                onDoubleClick={() => { jumpTo(i); setFocus(i) }} // double-click a name: its ring rises and the case study opens
                 data-magnetic
               >
                 <span className="project-item-n">{pad(i + 1)}</span>
