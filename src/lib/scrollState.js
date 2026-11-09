@@ -15,7 +15,7 @@ import * as THREE from 'three'
 const clamp01 = (x) => Math.min(1, Math.max(0, x))
 const smooth = (x) => { x = clamp01(x); return x * x * (3 - 2 * x) }
 
-const LAYOUTS = ['stars', 'rings', 'type']
+const LAYOUTS = ['rings']
 const initialLayout = () => {
   try {
     const l = new URLSearchParams(window.location.search).get('layout')
@@ -28,9 +28,11 @@ export const scrollState = {
   act: 0,         // 0 -> 1 while the Projects section is on screen
   project: 0,     // index of the project shown in 3D (written by Projects.jsx)
   layout: initialLayout(),
+  focus: -1,      // the project ring that was double-clicked and is raised with its summary (-1 = none)
   hoverNode: null, // constellation: index of the node under the pointer
   fit: 1,         // world-scale of the hero rig (written by the scene)
   heroHide: 0,    // 0..1: 1 once the hero's own two rings are swapped for the project rings (written by the 'rings' layout)
+  ringGate: 0,    // 0..1: how far the project rings have peeled out of the hero rings (straight from scroll)
   decoHide: 0,    // 0..1: how far the orbit lines, beads and wireframe sphere have faded away (written by the 'rings' layout)
   rigQuat: new THREE.Quaternion(),  // current rotation of the hero rig (written by the scene)
   starQuat: new THREE.Quaternion(), // rotation that turns the selected constellation node toward the camera
@@ -40,6 +42,15 @@ export const scrollState = {
 const pickers = new Set()
 export const onPick = (fn) => { pickers.add(fn); return () => pickers.delete(fn) }
 export const pickProject = (i) => pickers.forEach((fn) => fn(i))
+
+// 3D <-> page: double-clicking a ring raises it and opens its summary (focus = its index); -1 puts everything back
+const focusers = new Set()
+export const onFocus = (fn) => { focusers.add(fn); return () => focusers.delete(fn) }
+export const setFocus = (i) => {
+  if (scrollState.focus === i) return
+  scrollState.focus = i
+  focusers.forEach((fn) => fn(i))
+}
 
 let workEl = null
 
@@ -54,4 +65,10 @@ export function updateScrollState() {
   const enter = clamp01(1 - r.top / vh)     // 0 -> 1 while the section scrolls up into view
   const leave = clamp01(1 - r.bottom / vh)  // 0 -> 1 while it scrolls away
   scrollState.act = smooth(enter) * (1 - smooth(leave))
+
+  // The project rings come OUT of the hero rings, driven straight by the scroll position (no easing over time),
+  // so fast scrolling can never leave the animation lagging behind. Only wired up in the 'rings' layout.
+  const g = scrollState.layout === 'rings' ? smooth((scrollState.act - 0.55) / 0.45) : 0
+  scrollState.ringGate = g
+  scrollState.decoHide = clamp01(g * 3)               // orbit lines / beads / wireframe sphere fade away
 }

@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# launch video made with /brag (large, and rebuildable)
+brag-output/
