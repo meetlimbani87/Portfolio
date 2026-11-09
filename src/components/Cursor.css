@@ -1,0 +1,7 @@
+.cursor-dot, .cursor-ring {
+  position: fixed; top: 0; left: 0; z-index: 2000; pointer-events: none;
+  border-radius: 50%; translate: -50% -50%;
+}
+.cursor-dot { width: 6px; height: 6px; background: var(--accent); }
+.cursor-ring { width: 36px; height: 36px; border: 1px solid var(--accent); }
+@media (hover: none), (pointer: coarse) { .cursor-dot, .cursor-ring { display: none; } }

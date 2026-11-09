@@ -1,0 +1,16 @@
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1.5rem 6vw; opacity: 0; /* revealed by the intro */
+}
+.nav-logo { font-family: var(--font-display); font-weight: 700; font-size: 1.2rem; }
+.nav nav { display: flex; gap: 2rem; }
+.nav nav a { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.12em; opacity: 0.8; transition: opacity .3s; }
+.nav nav a:hover { opacity: 1; color: var(--accent); }
+.nav-progress {
+  position: absolute; left: 0; bottom: 0; height: 2px; width: 100%;
+  background: var(--accent); transform: scaleX(0); transform-origin: left;
+}
+@media (max-width: 600px) { .nav nav { gap: 1rem; } .nav nav a { font-size: .7rem; } }
+
+@media (max-width: 700px) { .nav { padding: 1rem 5vw; } }

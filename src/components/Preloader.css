@@ -1,0 +1,21 @@
+/* transparent overlay: the real hero scene is visible underneath */
+.preloader {
+  --p: 0;
+  position: fixed; inset: 0; z-index: 1000; pointer-events: none;
+}
+
+.pre-ui {
+  position: absolute; inset: 0; padding: 6vw;
+  display: flex; flex-direction: column; justify-content: space-between;
+}
+
+/* bottom counter: outline always visible, solid fill rises with progress */
+.pre-count {
+  position: relative; align-self: flex-start; display: grid;
+  font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(5rem, 20vw, 18rem); line-height: .8; letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+}
+.pre-count > span { grid-area: 1 / 1; }
+.pre-outline { color: transparent; -webkit-text-stroke: 2px var(--fg); }
+.pre-fill { color: var(--fg); clip-path: inset(calc(100% - var(--p) * 1%) 0 0 0); }
