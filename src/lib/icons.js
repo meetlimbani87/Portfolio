@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 
-const LIME = '#c6ff3d'
+const LIME = '#ffffff' // white: the material colour tints it (see palette.js)
 
 // Clean line icons (Lucide-style, 24x24 grid) drawn with Path2D so they stay crisp and consistent.
 const ICONS = {

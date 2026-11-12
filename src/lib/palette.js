@@ -1,10 +1,7 @@
 import { useSyncExternalStore } from 'react'
+import * as THREE from 'three'
 
-// Theme awareness for the 3D stage.
-// In light mode the whole canvas is inverted by a CSS filter (see index.css: --stage-filter), which turns the
-// copper rings steel-blue and the lime glow indigo-blue. Colours that are *neutral* in the scene (orbit lines,
-// the wire sphere, the dust) would just turn grey, so in light mode we draw them in the INVERSE of the colour
-// we want to see; the filter then lands on the wanted colour.
+// Theme awareness for the 3D stage: light mode swaps the glowing lime for blue (the brass rings stay brass).
 
 const root = typeof document !== 'undefined' ? document.documentElement : null
 const subscribe = (cb) => {
@@ -16,14 +13,27 @@ const subscribe = (cb) => {
 const snapshot = () => root?.dataset.theme === 'light'
 export const useIsLight = () => useSyncExternalStore(subscribe, snapshot, () => false)
 
-const invert = (hex) => {
-  const n = parseInt(hex.slice(1), 16)
-  return '#' + (0xffffff ^ n).toString(16).padStart(6, '0')
+
+export const ACCENT_DARK = '#c6ff3d'
+export const ACCENT_LIGHT = '#3f63c4'
+
+// Colours for the glowing parts, per theme. The glow textures are white, so the material colour carries the tint:
+//   plain  - for things with no texture (cube edges, glow strips)
+//   tex    - for textured ones (icon, knot band); in dark mode it equals the old lime-texture x lime-colour look
+//   base   - the un-boosted accent (lights, emissive)
+const make = (hex, squared) => {
+  const base = new THREE.Color(hex)
+  const plain = base.clone().multiplyScalar(2.2)
+  const tex = squared ? base.clone().multiply(base).multiplyScalar(2.2) : plain.clone()
+  return { base, plain, tex }
 }
+const DARK = make(ACCENT_DARK, true)
+const LIGHT = make(ACCENT_LIGHT, false)
+export const accentFor = (light) => (light ? LIGHT : DARK)
 
-// the colour we want to SEE in light mode (change these to restyle the light theme's orbit + wire sphere + dust)
-export const LIGHT_ORBIT = '#6f93d9'
-export const LIGHT_SHELL = '#6f93d9'
-export const LIGHT_DUST = '#8aa2d2'
-
-export const stageColor = (light, dark, wantedInLight) => (light ? invert(wantedInLight) : dark)
+// light-mode colours for the neutral scenery
+export const LIGHT_ORBIT = '#6f93d9' // orbit lines: subtle blue
+export const LIGHT_SHELL = '#2a2a33' // the wire sphere stays a neutral line (it is very faint)
+export const LIGHT_DUST = '#55555f'
+// slightly over-bright on purpose: the stage's ACES tone mapping pulls it back down to match the page (--bg)
+export const LIGHT_BG = new THREE.Color('#f4f3ef').multiplyScalar(1.7)

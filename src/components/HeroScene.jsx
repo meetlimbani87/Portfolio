@@ -11,14 +11,13 @@ import { scrollState, updateScrollState } from '../lib/scrollState'
 import ProjectRings from './ProjectRings'
 import BandRing from './BandRing'
 import { useDragTurn } from '../lib/dragTurn'
-import { useIsLight, stageColor, LIGHT_ORBIT, LIGHT_SHELL, LIGHT_DUST } from '../lib/palette'
+import { useIsLight, accentFor, LIGHT_ORBIT, LIGHT_SHELL, LIGHT_DUST, LIGHT_BG } from '../lib/palette'
 
 /* This file is the whole 3D stage. It lives in ONE fixed, full-screen canvas behind the page:
      - the hero world (cube, two rings, orbit lines) stays alive behind every section, centred once you leave the hero
      - one small silver orb per project rides the orbit lines; inside the Projects section each one in turn
        swells to fill the whole screen (see ProjectOrb) */
 
-const LIME = '#c6ff3d'
 const clamp01 = (x) => Math.min(1, Math.max(0, x))
 const ease = (x) => 1 - Math.pow(1 - clamp01(x), 3)
 const easeBack = (x) => {
@@ -27,14 +26,14 @@ const easeBack = (x) => {
 }
 const lerp = (a, b, t) => a + (b - a) * t
 
-// HDR lime (>1) so the bloom pass picks it up and it glows
-const limeHDR = new THREE.Color(LIME).multiplyScalar(2.2)
 
 // world position of each orb's slot on its orbit (filled by <OrbSlot/>, read by <Bead/>)
 const orbSlots = []
 
 /* ------------------------------------------------------------------ core cube */
 function Core() {
+  const light = useIsLight()
+  const A = accentFor(light)
   const ref = useRef()
   const tex = useMemo(() => iconTexture('code'), [])
   const S = 0.95
@@ -62,23 +61,23 @@ function Core() {
   return (
     <group ref={ref} scale={0.0001}>
       <RoundedBox args={[S, S, S]} radius={0.06} smoothness={4}>
-        <meshPhysicalMaterial color="#07120a" roughness={0.05} metalness={0.1} transparent opacity={0.3} clearcoat={1} envMapIntensity={1.4} />
+        <meshPhysicalMaterial color={light ? '#cfd8ee' : '#07120a'} roughness={0.05} metalness={0.1} transparent opacity={0.3} clearcoat={1} envMapIntensity={1.4} />
       </RoundedBox>
       {edges.map((e, i) => (
-        <Line key={i} points={e} color={limeHDR} lineWidth={2.4} toneMapped={false} />
+        <Line key={i} points={e} color={A.plain} lineWidth={2.4} toneMapped={false} />
       ))}
       {/* inner glow */}
       <mesh scale={0.42}>
         <boxGeometry args={[1, 1, 1]} />
-        <meshBasicMaterial color={limeHDR} transparent opacity={0.2} toneMapped={false} depthWrite={false} />
+        <meshBasicMaterial color={A.plain} transparent opacity={0.2} toneMapped={false} depthWrite={false} />
       </mesh>
       {[S / 2 + 0.01, -S / 2 - 0.01].map((z) => (
         <mesh key={z} position={[0, 0, z]} rotation={[0, z < 0 ? Math.PI : 0, 0]}>
           <planeGeometry args={[0.64, 0.64]} />
-          <meshBasicMaterial map={tex} color={limeHDR} transparent toneMapped={false} depthWrite={false} />
+          <meshBasicMaterial map={tex} color={A.tex} transparent toneMapped={false} depthWrite={false} />
         </mesh>
       ))}
-      <pointLight color={LIME} intensity={9} distance={7} />
+      <pointLight color={A.base} intensity={9} distance={7} />
     </group>
   )
 }
@@ -159,7 +158,7 @@ function Orbit({ A, B, tilt, speed, slots = [], orderBase = 0 }) {
 
   return (
     <group ref={group} rotation={tilt} scale={0.0001} visible={false}>
-      <Line ref={line} points={pts} color={stageColor(light, '#d5d9dd', LIGHT_ORBIT)} lineWidth={1.1} transparent opacity={0.7} />
+      <Line ref={line} points={pts} color={light ? LIGHT_ORBIT : '#d5d9dd'} lineWidth={1.1} transparent opacity={0.7} />
       {slots.map((s, i) => (
         <OrbSlot key={i} A={A} B={B} a0={s.a0} speed={speed} index={s.index} />
       ))}
@@ -182,7 +181,7 @@ function Shell() {
   return (
     <mesh ref={ref} visible={false}>
       <icosahedronGeometry args={[1, 2]} />
-      <meshBasicMaterial ref={mat} color={stageColor(light, '#f2f0ea', LIGHT_SHELL)} wireframe transparent opacity={0} depthWrite={false} />
+      <meshBasicMaterial ref={mat} color={light ? LIGHT_SHELL : '#f2f0ea'} wireframe transparent opacity={0} depthWrite={false} />
     </mesh>
   )
 }
@@ -326,7 +325,7 @@ function Particles({ count = 900 }) {
       <bufferGeometry>
         <bufferAttribute attach="attributes-position" args={[positions, 3]} />
       </bufferGeometry>
-      <pointsMaterial ref={mat} color={stageColor(light, '#f2f0ea', LIGHT_DUST)} size={0.03} sizeAttenuation transparent opacity={0} depthWrite={false} />
+      <pointsMaterial ref={mat} color={light ? LIGHT_DUST : '#f2f0ea'} size={0.03} sizeAttenuation transparent opacity={0} depthWrite={false} />
     </points>
   )
 }
@@ -346,6 +345,7 @@ function ScrollDriver() {
 }
 
 export default function Stage() {
+  const light = useIsLight()
   const mobile = typeof window !== 'undefined' && window.innerWidth < 700
   return (
     <Canvas
@@ -356,7 +356,7 @@ export default function Stage() {
       eventSource={document.documentElement}
       eventPrefix="client"
     >
-      <color attach="background" args={['#0a0a0c']} />
+      <color attach="background" args={[light ? LIGHT_BG : '#0a0a0c']} />
       <ambientLight intensity={0.25} />
       <directionalLight position={[4, 5, 5]} intensity={2.2} />
       <directionalLight position={[-5, -2, 3]} intensity={1.2} color="#9fb4ff" />

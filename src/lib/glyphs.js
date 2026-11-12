@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 
-const LIME = '#c6ff3d'
+const LIME = '#ffffff' // white: the material colour tints it (see palette.js)
 const W = 2048, H = 256 // one tile of the ornament strip; it repeats around the ring
 
 function rng(seed) {

@@ -7,6 +7,7 @@
   --surface: #14141a;
   --muted: #8a8a92;
   --accent: #c6ff3d;
+  --accent-rgb: 198, 255, 61;
   --on-accent: #000;
   --line: rgba(var(--fg-rgb), 0.12);
   --font-display: 'Space Grotesk', system-ui, sans-serif;
@@ -15,7 +16,7 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* light theme: same layout, inverted palette. The 3D stage is inverted with a filter: copper rings -> steel blue, lime glow -> indigo blue */
+/* light theme: same layout, inverted palette. The 3D stage swaps its lime glow for blue in code (lib/palette.js); the brass rings stay brass */
 :root[data-theme='light'] {
   color-scheme: light;
   --bg: #f4f3ef;
@@ -25,10 +26,9 @@
   --surface: #e9e7e0;
   --muted: #5d5d66;
   --accent: #3f63c4;
+  --accent-rgb: 63, 99, 196;
   --on-accent: #fff;
 }
-:root[data-theme='light'] { --stage-filter: invert(1) saturate(.6); }
-:root[data-theme='light'] .stage canvas { filter: var(--stage-filter); }
 :root[data-theme='light'] ::selection { color: #fff; }
 body, .section, .skill-card { transition: background-color .4s, color .4s; }
 

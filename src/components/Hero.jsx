@@ -40,7 +40,10 @@ export default function Hero({ ready }) {
       // GSAP normally slows its clock after a hitch (lag smoothing), which made the wave freeze part-way and then catch up
       // in a jump while the 3D scene was still starting; during the entrance it follows real time instead.
       gsap.ticker.lagSmoothing(0)
-      const LIME_OFF = 'rgba(198,255,61,0)'
+      // the wave uses the theme's accent (lime in dark mode, blue in light mode)
+      const cs = getComputedStyle(document.documentElement)
+      const ACCENT = cs.getPropertyValue('--accent').trim()
+      const LIME_OFF = `rgba(${cs.getPropertyValue('--accent-rgb').trim()},0)`
       gsap.timeline({
         onComplete: () => {
           gsap.set(row2, { color: LIME_OFF }) // whatever happened on the way, the name ends as a clean outline
@@ -52,7 +55,7 @@ export default function Hero({ ready }) {
         .to(row2, rise, 0.3)
         .to(row2, {
           keyframes: [
-            { color: '#c6ff3d', duration: 0.25, ease: 'power2.out' },
+            { color: ACCENT, duration: 0.25, ease: 'power2.out' },
             { color: LIME_OFF, duration: 0.8, ease: 'power2.inOut' },
           ],
           stagger: 0.08,

@@ -1,3 +1,4 @@
+import { useIsLight, accentFor } from '../lib/palette'
 import { useEffect, useMemo, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
@@ -16,8 +17,6 @@ import { heroRings, RING, THICK, H, GLYPH_H, STACK_R, GAP, SPREAD, LINE, stack, 
    Props: k = which hero ring it is (0 smaller, 1 larger); i = which project it carries (a hero ring carries
    project k; extra rings carry 2..5); hero = true for the two rings that are always there. */
 
-const LIME = new THREE.Color('#c6ff3d')
-const limeHDR = LIME.clone().multiplyScalar(2.2)
 const DULL = new THREE.Color(0.34, 0.27, 0.21) // the bland, unlit look of a ring that is not selected
 const clamp01 = (x) => Math.min(1, Math.max(0, x))
 const smooth = (x) => { x = clamp01(x); return x * x * (3 - 2 * x) }
@@ -30,6 +29,7 @@ const _e = new THREE.Euler(), _q0 = new THREE.Quaternion(), _q1 = new THREE.Quat
 
 export default function BandRing({ k, i, hero = false, tilt = [0, 0, 0], speed = 0.4, channel, phase = 0 }) {
   const { R } = RING[k]
+  const A = accentFor(useIsLight())
   const outer = useRef()
   const spin = useRef()
   const knotMat = useRef()
@@ -48,7 +48,7 @@ export default function BandRing({ k, i, hero = false, tilt = [0, 0, 0], speed =
   const eng = useMemo(() => engraveTextures(PROJECTS[i].title, rep, false), [i, rep])
   const worn = useMemo(() => weatheredTexture(), [])
   // one material for the glowing rules and the inner strip, so they can all be dimmed together
-  const glowMat = useMemo(() => new THREE.MeshBasicMaterial({ color: limeHDR.clone(), toneMapped: false, side: THREE.DoubleSide }), [])
+  const glowMat = useMemo(() => new THREE.MeshBasicMaterial({ color: A.plain.clone(), toneMapped: false, side: THREE.DoubleSide }), [])
 
   useEffect(() => {
     if (!hero) return
@@ -118,7 +118,7 @@ export default function BandRing({ k, i, hero = false, tilt = [0, 0, 0], speed =
     // inscription. (In the hero, e = 0, everything glows as before.)
     const lit = Math.min(1, sel.current + 0.6 * hov.current)
     const glow = 1 + (lit - 1) * e // 1 in the hero, then only the selected ring stays lit
-    glowMat.color.setRGB(DULL.r + (limeHDR.r - DULL.r) * glow, DULL.g + (limeHDR.g - DULL.g) * glow, DULL.b + (limeHDR.b - DULL.b) * glow)
+    glowMat.color.setRGB(DULL.r + (A.plain.r - DULL.r) * glow, DULL.g + (A.plain.g - DULL.g) * glow, DULL.b + (A.plain.b - DULL.b) * glow)
     // the engraving: it fades in as the ring leaves the hero, and ONLY the selected ring's letters glow green
     nameMat.current.opacity = smooth((e - 0.25) / 0.75)
     nameMat.current.emissiveIntensity = (2.4 * sel.current + 1.0 * hov.current) * nameMat.current.opacity
@@ -151,14 +151,14 @@ export default function BandRing({ k, i, hero = false, tilt = [0, 0, 0], speed =
         {/* engraved glowing inscription around the outer face: knot pattern (hero) ... */}
         <mesh>
           <cylinderGeometry args={[outerR + 0.004, outerR + 0.004, GLYPH_H, 220, 1, true]} />
-          <meshBasicMaterial ref={knotMat} map={knot} color={limeHDR} transparent toneMapped={false} depthWrite={false} />
+          <meshBasicMaterial ref={knotMat} map={knot} color={A.tex} transparent toneMapped={false} depthWrite={false} />
         </mesh>
         {/* ... and the project's name, carved into the same outer face (projects) */}
         <mesh>
           <cylinderGeometry args={[outerR + 0.005, outerR + 0.005, GLYPH_H, 220, 1, true]} />
           <meshStandardMaterial
             ref={nameMat} map={eng.color} alphaMap={eng.alpha} bumpMap={eng.bump} bumpScale={6}
-            emissive={LIME} emissiveMap={eng.glow} emissiveIntensity={0}
+            emissive={A.base} emissiveMap={eng.glow} emissiveIntensity={0}
             metalness={0.6} roughness={0.45} envMapIntensity={0.9} transparent opacity={0}
             polygonOffset polygonOffsetFactor={-2} polygonOffsetUnits={-2}
           />
