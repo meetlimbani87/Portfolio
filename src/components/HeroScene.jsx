@@ -362,7 +362,7 @@ export default function Stage() {
         <Bead key={i} i={i} />
       ))}
       <Particles />
-      <Environment preset="city" environmentIntensity={0.7} />
+      <Environment files="/hdri/potsdamer_platz_1k.hdr" environmentIntensity={0.7} />
       <EffectComposer multisampling={mobile ? 0 : 4}>
         <Bloom mipmapBlur intensity={0.8} luminanceThreshold={1} luminanceSmoothing={0.15} />
         <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />

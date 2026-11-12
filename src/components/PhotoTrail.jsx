@@ -18,7 +18,7 @@ export default function PhotoTrail({ src, alt }) {
 
     const buildGray = () => {
       if (!im.naturalWidth || !w) return
-      const g = gray.getContext('2d')
+      const g = gray.getContext('2d', { willReadFrequently: true })
       gray.width = w; gray.height = h
       g.drawImage(im, 0, 0, w, h)
       const d = g.getImageData(0, 0, w, h)
