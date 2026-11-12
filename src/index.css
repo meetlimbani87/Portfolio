@@ -15,7 +15,7 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* light theme: same layout, inverted palette (the 3D stage is inverted with a filter below) */
+/* light theme: same layout, inverted palette. The 3D stage is inverted with a filter: copper rings -> steel blue, lime glow -> indigo blue */
 :root[data-theme='light'] {
   color-scheme: light;
   --bg: #f4f3ef;
@@ -24,10 +24,11 @@
   --fg-rgb: 20, 20, 26;
   --surface: #e9e7e0;
   --muted: #5d5d66;
-  --accent: #5f8f00;
+  --accent: #3f63c4;
   --on-accent: #fff;
 }
-:root[data-theme='light'] .stage canvas { filter: invert(1) hue-rotate(180deg); }
+:root[data-theme='light'] { --stage-filter: invert(1) saturate(.6); }
+:root[data-theme='light'] .stage canvas { filter: var(--stage-filter); }
 :root[data-theme='light'] ::selection { color: #fff; }
 body, .section, .skill-card { transition: background-color .4s, color .4s; }
 

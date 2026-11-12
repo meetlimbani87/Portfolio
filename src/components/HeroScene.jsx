@@ -11,6 +11,7 @@ import { scrollState, updateScrollState } from '../lib/scrollState'
 import ProjectRings from './ProjectRings'
 import BandRing from './BandRing'
 import { useDragTurn } from '../lib/dragTurn'
+import { useIsLight, stageColor, LIGHT_ORBIT, LIGHT_SHELL, LIGHT_DUST } from '../lib/palette'
 
 /* This file is the whole 3D stage. It lives in ONE fixed, full-screen canvas behind the page:
      - the hero world (cube, two rings, orbit lines) stays alive behind every section, centred once you leave the hero
@@ -139,6 +140,7 @@ function OrbSlot({ A, B, a0, speed, index }) {
 }
 
 function Orbit({ A, B, tilt, speed, slots = [], orderBase = 0 }) {
+  const light = useIsLight()
   const group = useRef()
   const line = useRef()
   const pts = useMemo(() => {
@@ -157,7 +159,7 @@ function Orbit({ A, B, tilt, speed, slots = [], orderBase = 0 }) {
 
   return (
     <group ref={group} rotation={tilt} scale={0.0001} visible={false}>
-      <Line ref={line} points={pts} color="#d5d9dd" lineWidth={1.1} transparent opacity={0.7} />
+      <Line ref={line} points={pts} color={stageColor(light, '#d5d9dd', LIGHT_ORBIT)} lineWidth={1.1} transparent opacity={0.7} />
       {slots.map((s, i) => (
         <OrbSlot key={i} A={A} B={B} a0={s.a0} speed={speed} index={s.index} />
       ))}
@@ -167,6 +169,7 @@ function Orbit({ A, B, tilt, speed, slots = [], orderBase = 0 }) {
 
 /* ------------------------------------------------------------------ faint wireframe sphere */
 function Shell() {
+  const light = useIsLight()
   const ref = useRef()
   const mat = useRef()
   useFrame(() => {
@@ -179,7 +182,7 @@ function Shell() {
   return (
     <mesh ref={ref} visible={false}>
       <icosahedronGeometry args={[1, 2]} />
-      <meshBasicMaterial ref={mat} color="#f2f0ea" wireframe transparent opacity={0} depthWrite={false} />
+      <meshBasicMaterial ref={mat} color={stageColor(light, '#f2f0ea', LIGHT_SHELL)} wireframe transparent opacity={0} depthWrite={false} />
     </mesh>
   )
 }
@@ -296,6 +299,7 @@ function Rig() {
 }
 
 function Particles({ count = 900 }) {
+  const light = useIsLight()
   const ref = useRef()
   const mat = useRef()
   const positions = useMemo(() => {
@@ -322,7 +326,7 @@ function Particles({ count = 900 }) {
       <bufferGeometry>
         <bufferAttribute attach="attributes-position" args={[positions, 3]} />
       </bufferGeometry>
-      <pointsMaterial ref={mat} color="#f2f0ea" size={0.03} sizeAttenuation transparent opacity={0} depthWrite={false} />
+      <pointsMaterial ref={mat} color={stageColor(light, '#f2f0ea', LIGHT_DUST)} size={0.03} sizeAttenuation transparent opacity={0} depthWrite={false} />
     </points>
   )
 }
