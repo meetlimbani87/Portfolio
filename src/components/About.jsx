@@ -1,5 +1,6 @@
 import { useRef } from 'react'
 import { useReveal } from '../lib/useReveal'
+import PhotoTrail from './PhotoTrail'
 
 const stats = [
   { n: '00+', l: 'Projects shipped' },
@@ -18,7 +19,7 @@ export default function About() {
         [Replace with your short intro.]
       </p>
       <div className="about-grid">
-        <div className="about-photo" data-reveal>[ photo ]</div>
+        <PhotoTrail src="/about/meet.jpg" alt="Meet Limbani" />
         <div className="about-stats">
           {stats.map((s) => (
             <div className="stat" key={s.l} data-reveal>
