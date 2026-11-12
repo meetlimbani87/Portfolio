@@ -15,12 +15,15 @@ export default function PhotoTrail({ src, alt }) {
     const gray = document.createElement('canvas')
     let w = 0, h = 0, dpr = 1, raf = 0, idle = 0
     let last = null, cur = null
+    const isLight = () => document.documentElement.dataset.theme === 'light'
 
     const buildGray = () => {
       if (!im.naturalWidth || !w) return
       const g = gray.getContext('2d', { willReadFrequently: true })
       gray.width = w; gray.height = h
       g.drawImage(im, 0, 0, w, h)
+      // light mode is the reverse: the page photo is black-and-white and the trail reveals the colour version
+      if (isLight()) return
       const d = g.getImageData(0, 0, w, h)
       const px = d.data
       for (let i = 0; i < px.length; i += 4) {
@@ -88,12 +91,14 @@ export default function PhotoTrail({ src, alt }) {
     resize()
     const ro = new ResizeObserver(resize)
     ro.observe(el)
+    const mo = new MutationObserver(() => { buildGray(); kick() })
+    mo.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
     if (!im.complete) im.addEventListener('load', buildGray, { once: true })
     el.addEventListener('pointermove', move)
     el.addEventListener('pointerdown', move)
     el.addEventListener('pointerleave', leave)
     return () => {
-      cancelAnimationFrame(raf); ro.disconnect()
+      cancelAnimationFrame(raf); ro.disconnect(); mo.disconnect()
       el.removeEventListener('pointermove', move)
       el.removeEventListener('pointerdown', move)
       el.removeEventListener('pointerleave', leave)

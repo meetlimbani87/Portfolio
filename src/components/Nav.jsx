@@ -9,6 +9,14 @@ export default function Nav({ ready }) {
   const bar = useRef(null)
   const [open, setOpen] = useState(false)
   const [current, setCurrent] = useState('')
+  const [theme, setTheme] = useState(() => document.documentElement.dataset.theme || 'dark')
+
+  const toggleTheme = () => {
+    const next = theme === 'dark' ? 'light' : 'dark'
+    document.documentElement.dataset.theme = next
+    try { localStorage.setItem('theme', next) } catch { /* private mode */ }
+    setTheme(next)
+  }
 
   // nav joins the intro after the hero text
   useEffect(() => {
@@ -82,12 +90,24 @@ export default function Nav({ ready }) {
           <a key={l} href={`#${l}`} onClick={go(l)} className={current === l ? 'is-current' : ''} data-magnetic>{l}</a>
         ))}
       </nav>
+      <div className="nav-right">
+      <button
+        type="button" className="theme-toggle" onClick={toggleTheme} data-magnetic
+        aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'} title={theme === 'dark' ? 'Light mode' : 'Dark mode'}
+      >
+        {theme === 'dark' ? (
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2" /><path d="M12 2.5v2.6M12 18.9v2.6M2.5 12h2.6M18.9 12h2.6M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8" /></svg>
+        ) : (
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7z" /></svg>
+        )}
+      </button>
       <button
         type="button" className="nav-toggle" aria-label={open ? 'Close menu' : 'Open menu'}
         aria-expanded={open} aria-controls="side-nav" onClick={() => setOpen((o) => !o)}
       >
         <span /><span />
       </button>
+      </div>
       <div className="nav-progress" ref={bar} />
 
       <div className="side-backdrop" onClick={() => setOpen(false)} aria-hidden="true" />

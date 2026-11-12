@@ -4,7 +4,7 @@
 }
 .stage-vignette {
   position: absolute; inset: 0; z-index: 1; pointer-events: none;
-  background: radial-gradient(ellipse at center, transparent 40%, rgba(10,10,12,.85) 100%);
+  background: radial-gradient(ellipse at center, transparent 40%, rgba(var(--bg-rgb),.85) 100%);
 }
 .stage-grain {
   position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: .07;

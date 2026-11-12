@@ -21,7 +21,7 @@ export default function Hero({ ready }) {
     const ctx = gsap.context(() => {
       // letters wait below their masks, tilted; LIMBANI starts solid and is hollowed out later
       gsap.set('.char', { yPercent: 115, skewY: 14, transformOrigin: '0% 100%' })
-      gsap.set('.title-row:nth-child(2) .char', { color: '#f2f0ea' })
+      gsap.set('.title-row:nth-child(2) .char', { color: getComputedStyle(document.documentElement).getPropertyValue('--fg').trim() || '#f2f0ea' })
       gsap.set('.hero-fade', { opacity: 0, y: 24 })
     }, root)
     return () => ctx.revert()
