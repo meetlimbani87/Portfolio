@@ -123,6 +123,49 @@ h2, h3 { font-family: var(--font-display); font-weight: 700; letter-spacing: -0.
 .t-input { display: flex; gap: .5rem; margin-top: .3rem; }
 .t-input input { flex: 1; min-width: 0; background: none; border: 0; outline: 0; color: var(--fg); font: inherit; caret-color: var(--accent); }
 
+/* --- a ring was double-clicked: the list and side summary step aside, the raised ring's summary comes up --- */
+.projects.is-focus .project-list, .projects.is-focus .projects-title, .projects.is-focus .eyebrow:first-child { opacity: 0; pointer-events: none; }
+.projects.is-focus .project-meta { display: none; }
+.project-list, .projects-title, .project-meta { transition: opacity .45s; }
+.focus-panel {
+  position: absolute; left: 50%; bottom: 5vh; transform: translateX(-50%); z-index: 4;
+  width: min(96rem, 96vw); height: auto; max-height: calc(100vh - 9.5rem); align-items: center; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); grid-template-rows: minmax(0, 1fr); gap: 1.8rem;
+  padding: 2rem 2.2rem; border: 1px solid rgba(198,255,61,.25); border-radius: 18px;
+  background: rgba(8,10,6,.78); backdrop-filter: blur(12px);
+  animation: focus-up .7s cubic-bezier(.2,.7,.2,1) both;
+}
+.focus-panel.no-shots { grid-template-columns: minmax(0, 1fr); width: min(44rem, 90vw); }
+.focus-panel, .focus-text { overscroll-behavior: contain; }
+.focus-text { display: grid; gap: .85rem; align-content: start; overflow-y: auto; padding-right: .6rem; min-height: 0; scrollbar-width: thin; scrollbar-color: rgba(198,255,61,.4) transparent; }
+.focus-text h3 { font-size: clamp(2.2rem, 4vw, 4rem); line-height: 1; letter-spacing: -.03em; }
+.focus-text p { color: rgba(242,240,234,.9); font-size: clamp(1.1rem, 1.35vw, 1.4rem); line-height: 1.6; }
+.focus-points { display: grid; gap: .4rem; list-style: none; padding: 0; margin: .2rem 0; }
+.focus-points li { position: relative; padding-left: 1.1rem; color: rgba(242,240,234,.85); font-size: clamp(1rem, 1.2vw, 1.2rem); line-height: 1.55; }
+.focus-points li::before { content: ''; position: absolute; left: 0; top: .55em; width: .4rem; height: .4rem; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+.focus-stack { display: flex; flex-wrap: wrap; gap: .4rem; }
+.focus-stack span { padding: .25rem .65rem; border: 1px solid rgba(255,255,255,.16); border-radius: 999px; font-size: .72rem; letter-spacing: .04em; color: rgba(242,240,234,.8); }
+.focus-gallery { display: grid; gap: .6rem; align-content: start; min-height: 0; }
+.focus-main { position: relative; display: block; width: 100%; aspect-ratio: 16 / 10; border-radius: 10px; overflow: hidden; background: #0b0c0a; border: 1px solid rgba(255,255,255,.12); cursor: zoom-in; }
+.focus-main img { width: 100%; height: 100%; object-fit: contain; display: block; animation: shot-in .35s ease both; }
+.focus-count { position: absolute; right: .6rem; bottom: .5rem; padding: .15rem .5rem; border-radius: 999px; background: rgba(0,0,0,.6); font-size: .7rem; letter-spacing: .08em; color: #fff; }
+.focus-thumbs { display: flex; gap: .45rem; overflow-x: auto; padding-bottom: .2rem; scrollbar-width: thin; }
+.focus-thumbs button { flex: 0 0 4.4rem; aspect-ratio: 16 / 10; border-radius: 6px; overflow: hidden; border: 1px solid rgba(255,255,255,.14); opacity: .6; transition: opacity .25s, border-color .25s; }
+.focus-thumbs button.is-on, .focus-thumbs button:hover { opacity: 1; border-color: var(--accent); }
+.focus-thumbs img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.focus-close { position: absolute; top: .7rem; right: .9rem; z-index: 2; width: 2rem; height: 2rem; border-radius: 50%; border: 1px solid rgba(255,255,255,.2); background: rgba(0,0,0,.4); color: var(--muted); font-size: .85rem; }
+.focus-close:hover { color: #000; background: var(--accent); }
+.lightbox { position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; background: rgba(0,0,0,.92); cursor: zoom-out; animation: shot-in .25s ease both; }
+.lightbox img { max-width: 94vw; max-height: 92vh; object-fit: contain; border-radius: 6px; }
+.lb-nav, .lb-close { position: absolute; width: 3rem; height: 3rem; border-radius: 50%; border: 1px solid rgba(255,255,255,.25); background: rgba(0,0,0,.5); color: #fff; font-size: 1.5rem; line-height: 1; }
+.lb-nav:hover, .lb-close:hover { background: var(--accent); color: #000; }
+.lb-prev { left: 2vw; top: 50%; transform: translateY(-50%); }
+.lb-next { right: 2vw; top: 50%; transform: translateY(-50%); }
+.lb-close { right: 2vw; top: 3vh; font-size: 1rem; }
+@keyframes shot-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes focus-up { from { opacity: 0; transform: translate(-50%, 36px); } to { opacity: 1; transform: translate(-50%, 0); } }
+@media (max-width: 800px) { .focus-panel { grid-template-columns: 1fr; bottom: 10vh; max-height: 66vh; overflow-y: auto; } .focus-text { overflow: visible; } }
+.projects.is-focus .layout-switch, .projects.is-focus .projects-count { opacity: 0; pointer-events: none; }
+.layout-switch, .projects-count { transition: opacity .35s; }
 
 /* ================= responsive ================= */
 @media (max-width: 900px) {
@@ -196,3 +239,15 @@ h2, h3 { font-family: var(--font-display); font-weight: 700; letter-spacing: -0.
   .projects-inner { padding-top: 14vh; }
   .project-meta { bottom: 4vh; }
 }
+
+.about-note { color: var(--muted); font-size: 1.05rem; max-width: 46ch; margin: -3rem 0 4rem; }
+.focus-badges { display: flex; flex-wrap: wrap; gap: .4rem; }
+.focus-badges span { padding: .22rem .7rem; border-radius: 999px; background: var(--accent); color: #0a0a0c; font-size: .68rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+@media (max-width: 900px) { .about-note { margin: -1.5rem 0 2.5rem; } }
+
+.learning { margin-top: 3rem; padding: 2rem; border: 1px solid var(--line); display: grid; gap: .8rem; }
+.learning h3 { font-size: clamp(1.6rem, 3vw, 2.6rem); letter-spacing: -.02em; }
+.learning p { color: var(--muted); }
+.learning ul { display: flex; flex-wrap: wrap; gap: .6rem; list-style: none; padding: 0; margin: .4rem 0 0; }
+.learning li { padding: .45rem 1.1rem; border: 1px solid var(--accent); border-radius: 999px; color: var(--accent); font-size: .85rem; letter-spacing: .08em; text-transform: uppercase; }
+@media (max-width: 760px) { .learning { padding: 1.3rem 1.1rem; margin-top: 2rem; } }

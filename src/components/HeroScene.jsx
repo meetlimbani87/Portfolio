@@ -8,9 +8,9 @@ import { intro } from '../lib/intro'
 import { iconTexture } from '../lib/icons'
 import { knotTexture, weatheredTexture } from '../lib/glyphs'
 import { scrollState, updateScrollState } from '../lib/scrollState'
-import { heroRings } from '../lib/heroRings'
-import Constellation from './Constellation'
 import ProjectRings from './ProjectRings'
+import BandRing from './BandRing'
+import { useDragTurn } from '../lib/dragTurn'
 
 /* This file is the whole 3D stage. It lives in ONE fixed, full-screen canvas behind the page:
      - the hero world (cube, two rings, orbit lines) stays alive behind every section, centred once you leave the hero
@@ -122,65 +122,6 @@ function bandProfile(R, a, H) {
   return out
 }
 
-/* Solid Ten-Rings-style ring: a chunky copper band with a glowing engraved knot band, glowing rules
-   and an inner glow strip. It spins on its own axis (the ornament makes that visible) while the
-   whole ring precesses and wobbles like a gyroscope. */
-function Ring({ R, tilt, speed, channel, phase = 0 }) {
-  const outer = useRef()
-  const spin = useRef()
-  const THICK = 0.25, H = 0.68, GLYPH_H = 0.3
-  const geo = useMemo(() => new THREE.LatheGeometry(bandProfile(R, THICK / 2, H), 220), [R])
-  const glyphs = useMemo(() => knotTexture(Math.max(1, Math.round((2 * Math.PI * R) / (GLYPH_H * 8)))), [R])
-  const worn = useMemo(() => weatheredTexture(), [])
-  // let the project-rings layout find this ring, so its rings can come out of it
-  useEffect(() => {
-    const k = channel === 'ring1' ? 0 : 1
-    heroRings[k] = outer.current
-    return () => { heroRings[k] = null }
-  }, [channel])
-  const outerR = R + THICK / 2
-
-  useFrame(({ clock }, dt) => {
-    const t = clock.elapsedTime
-    spin.current.rotation.y += dt * speed
-    const v = intro[channel]
-    // the hero's two rings step aside when the project rings are showing
-    outer.current.scale.setScalar(Math.max(ease(v) * (1 - scrollState.heroHide), 0.0001))
-    outer.current.visible = v > 0.001
-    outer.current.rotation.x = tilt[0] + Math.sin(t * 0.35 + phase) * 0.14
-    outer.current.rotation.y = tilt[1] + t * 0.09 * Math.sign(speed)
-    outer.current.rotation.z = tilt[2] + (1 - ease(v)) * 1.4 // swings into its tilt as it forms
-  })
-
-  return (
-    <group ref={outer} rotation={tilt} scale={0.0001} visible={false}>
-      <group ref={spin}>
-        {/* solid beveled copper band */}
-        <mesh geometry={geo}>
-          <meshStandardMaterial color="#b8693a" metalness={1} roughness={0.3} roughnessMap={worn} bumpMap={worn} bumpScale={0.7} side={THREE.DoubleSide} envMapIntensity={1.7} />
-        </mesh>
-        {/* engraved glowing inscription around the outer face */}
-        <mesh>
-          <cylinderGeometry args={[outerR + 0.004, outerR + 0.004, GLYPH_H, 220, 1, true]} />
-          <meshBasicMaterial map={glyphs} color={limeHDR} transparent toneMapped={false} depthWrite={false} />
-        </mesh>
-        {/* glowing rules framing the inscription */}
-        {[GLYPH_H / 2, -GLYPH_H / 2].map((y) => (
-          <mesh key={y} position={[0, y, 0]} rotation={[Math.PI / 2, 0, 0]}>
-            <torusGeometry args={[outerR + 0.003, 0.01, 8, 220]} />
-            <meshBasicMaterial color={limeHDR} toneMapped={false} />
-          </mesh>
-        ))}
-        {/* glowing strip on the inner wall */}
-        <mesh>
-          <cylinderGeometry args={[R - THICK / 2 - 0.004, R - THICK / 2 - 0.004, 0.05, 200, 1, true]} />
-          <meshBasicMaterial color={limeHDR} side={THREE.DoubleSide} toneMapped={false} />
-        </mesh>
-      </group>
-    </group>
-  )
-}
-
 /* ------------------------------------------------------------------ thin orbit line + invisible slots the orbs follow */
 function OrbSlot({ A, B, a0, speed, index }) {
   const ref = useRef()
@@ -278,12 +219,18 @@ const ORBIT_A_SLOTS = orbitSlots(0, 0.5)
 const ORBIT_B_SLOTS = orbitSlots(1, 1.3)
 
 /* ------------------------------------------------------------------ whole rig */
+// the hero world can be turned by click-and-drag, but only while the hero is on screen
+const canTurnHero = () => scrollState.hero < 0.3
+const heroDragQ = new THREE.Quaternion(), tmpQ = new THREE.Quaternion()
+
 function Rig() {
+  const drag = useDragTurn(canTurnHero)
   const root = useRef()
   const heroGroup = useRef()
   const target = useRef({ x: 0, y: 0 })
   const rigQ = useMemo(() => new THREE.Quaternion(), [])
   const swayQ = useMemo(() => new THREE.Quaternion(), [])
+  const turn = useRef()
   const swayE = useMemo(() => new THREE.Euler(), [])
   const { size } = useThree()
 
@@ -307,13 +254,20 @@ function Rig() {
     const h = smooth(scrollState.hero)
     // in the Projects section the spinning world is the star of the screen, so it swells a touch
     root.current.scale.setScalar(fit * (1 - 0.12 * h) * (1 + 0.1 * scrollState.act))
+    scrollState.halfW = W0 / 2 / root.current.scale.x
     root.current.position.x = wide ? W0 * 0.05 * (1 - h) : 0
     root.current.position.y = Math.sin(t * 0.8) * 0.1 * fit + (wide ? 0 : -H0 * (portrait ? 0.14 : 0.06) * (1 - h))
     // the pointer tilts the world, but not in the Projects section, where it holds still. In the constellation
     // layout the world instead turns to bring the selected project's node to the front.
     const sway = 1 - scrollState.act
     swayQ.setFromEuler(swayE.set(-target.current.y * 0.25 * sway, target.current.x * 0.35 * sway, 0))
-    const goal = scrollState.layout === 'stars' && scrollState.act > 0.3 ? scrollState.starQuat : swayQ
+    const goal = swayQ
+    // the visitor's drag turns the world on top of that; it settles back as you scroll away from the hero
+    drag.step(dt)
+    const away = 1 - smooth(scrollState.hero * 4)
+    if (away < 1) { const keep = Math.exp(-6 * dt); drag.yaw *= keep; drag.pitch *= keep; drag.vy *= keep; drag.vp *= keep }
+    heroDragQ.identity().slerp(drag.quat(tmpQ), away)
+    turn.current.quaternion.copy(heroDragQ) // the drag turns everything EXCEPT the cube in the middle, which only follows the cursor
     rigQ.slerp(goal, 1 - Math.exp(-3 * dt))
     root.current.quaternion.copy(rigQ)
     scrollState.rigQuat.copy(rigQ)
@@ -321,19 +275,22 @@ function Rig() {
 
   return (
     <group ref={root}>
+      {/* the cube in the middle: it never turns with a drag, it only follows the cursor (through the whole rig) */}
       <group ref={heroGroup}>
         <Core />
-        <Ring R={2.55} tilt={[0.55, 0.2, 1.2]} speed={0.45} channel="ring1" phase={0} />
-        <Ring R={3.05} tilt={[0.38, 0, -0.42]} speed={-0.38} channel="ring2" phase={2} />
-        <Shell />
       </group>
-      <Orbit A={4.0} B={2.2} tilt={[0.55, 0.15, 0.5]} speed={0.16} slots={ORBIT_A_SLOTS} />
-      <Orbit A={3.5} B={1.85} tilt={[0.2, -0.4, -0.75]} speed={-0.14} slots={ORBIT_B_SLOTS} />
-      {/* the Projects section: four ways to show the selected project (switch with the 1 / 2 / 3 / 4 keys) */}
-      <Suspense fallback={null}>
-        <Constellation />
-        <ProjectRings />
-      </Suspense>
+      {/* everything else turns when the visitor click-drags in the hero */}
+      <group ref={turn}>
+        <BandRing hero k={0} i={0} tilt={[0.55, 0.2, 1.2]} speed={0.45} channel="ring1" phase={0} />
+        <BandRing hero k={1} i={1} tilt={[0.38, 0, -0.42]} speed={-0.38} channel="ring2" phase={2} />
+        <Shell />
+        <Orbit A={4.0} B={2.2} tilt={[0.55, 0.15, 0.5]} speed={0.16} slots={ORBIT_A_SLOTS} />
+        <Orbit A={3.5} B={1.85} tilt={[0.2, -0.4, -0.75]} speed={-0.14} slots={ORBIT_B_SLOTS} />
+        {/* the Projects section: ways to show the selected project (switch with the 1 / 2 / 3 keys) */}
+        <Suspense fallback={null}>
+          <ProjectRings />
+        </Suspense>
+      </group>
     </group>
   )
 }

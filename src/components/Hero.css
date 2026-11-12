@@ -24,7 +24,7 @@
   display: flex; flex-direction: column;
 }
 .title-row { display: block; white-space: nowrap; }
-.title-row:nth-child(2) { padding-left: 12vw; color: transparent; -webkit-text-stroke: 2px var(--fg); }
+.title-row:nth-child(2) { padding-left: 12vw; color: transparent; -webkit-text-stroke: 2px var(--fg); letter-spacing: .015em; } /* the outlined name is not squeezed together like MEET: tight letters made their outlines overlap and cross */
 .char-mask { display: inline-block; overflow: hidden; padding: .04em .12em; margin: 0 -.12em; vertical-align: top; }
 .char { display: inline-block; will-change: transform; }
 
@@ -33,7 +33,7 @@
 .role-label { color: var(--muted); }
 .role-window { display: inline-block; height: 1.3em; overflow: hidden; }
 .role-track { display: flex; flex-direction: column; }
-.role-track span { height: 1.3em; line-height: 1.3em; color: var(--accent); font-family: var(--font-display); font-weight: 500; }
+.role-track span { white-space: nowrap; height: 1.3em; line-height: 1.3em; color: var(--accent); font-family: var(--font-display); font-weight: 500; }
 
 .hero-scroll { display: flex; align-items: center; gap: .8rem; }
 .scroll-line { width: 1px; height: 48px; background: var(--line); position: relative; overflow: hidden; }

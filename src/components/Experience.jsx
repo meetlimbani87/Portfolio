@@ -3,9 +3,9 @@ import gsap from 'gsap'
 import { useReveal } from '../lib/useReveal'
 
 const items = [
-  { when: '2025 — Now', role: 'Role / Degree', where: 'Company / University', desc: 'What you did, built or learned.' },
-  { when: '2024 — 2025', role: 'Role / Degree', where: 'Company / University', desc: 'What you did, built or learned.' },
-  { when: '2022 — 2024', role: 'Role / Degree', where: 'Company / University', desc: 'What you did, built or learned.' },
+  { when: '3 months', role: 'Intern', where: 'Infividhya', desc: 'Worked on React and Python.' },
+  { when: '3 months', role: 'Full-Stack & Automation Intern', where: 'VedLogic', desc: 'Building automations with n8n and shipping features in React and C#.' },
+  { when: 'Graduating 2027', role: 'Bachelor of Engineering — Computer Science', where: 'LDRP-ITR', desc: 'BE CE, in progress.' },
 ]
 
 export default function Experience() {
@@ -29,7 +29,7 @@ export default function Experience() {
             <span className="tl-dot" />
             <span className="eyebrow">{it.when}</span>
             <h3>{it.role}</h3>
-            <p className="tl-where">{it.where}</p>
+            {it.where && <p className="tl-where">{it.where}</p>}
             <p>{it.desc}</p>
           </div>
         ))}
