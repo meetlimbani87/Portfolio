@@ -35,5 +35,3 @@ export const accentFor = (light) => (light ? LIGHT : DARK)
 export const LIGHT_ORBIT = '#6f93d9' // orbit lines: subtle blue
 export const LIGHT_SHELL = '#2a2a33' // the wire sphere stays a neutral line (it is very faint)
 export const LIGHT_DUST = '#55555f'
-// slightly over-bright on purpose: the stage's ACES tone mapping pulls it back down to match the page (--bg)
-export const LIGHT_BG = new THREE.Color('#f4f3ef').multiplyScalar(1.7)

@@ -60,3 +60,6 @@
   .hero-content { padding: 16vh 6vw 4vh; gap: 2vh; }
   .hero-title { font-size: clamp(2.4rem, 17vh, 6rem); }
 }
+
+/* light mode: a pale vignette would haze the rings, keep it faint and only at the very edges */
+:root[data-theme='light'] .stage-vignette { background: radial-gradient(ellipse at center, transparent 62%, rgba(var(--bg-rgb),.45) 100%); }

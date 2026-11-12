@@ -74,6 +74,7 @@ html { -webkit-text-size-adjust: 100%; }
 /* ---- 3D stage: one fixed canvas behind the whole page ---- */
 .stage { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
 main { position: relative; z-index: 1; }
+:root[data-theme='light'] .stage-dim { opacity: calc(var(--stage-dim, 0) * .2); } /* a white veil would wash the rings out */
 .stage-dim { position: absolute; inset: 0; z-index: 1; pointer-events: none; background: var(--bg); opacity: var(--stage-dim, 0); }
 
 /* while dragging the project rings: no text selection, grab cursor */

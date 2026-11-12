@@ -11,7 +11,7 @@ import { scrollState, updateScrollState } from '../lib/scrollState'
 import ProjectRings from './ProjectRings'
 import BandRing from './BandRing'
 import { useDragTurn } from '../lib/dragTurn'
-import { useIsLight, accentFor, LIGHT_ORBIT, LIGHT_SHELL, LIGHT_DUST, LIGHT_BG } from '../lib/palette'
+import { useIsLight, accentFor, LIGHT_ORBIT, LIGHT_SHELL, LIGHT_DUST } from '../lib/palette'
 
 /* This file is the whole 3D stage. It lives in ONE fixed, full-screen canvas behind the page:
      - the hero world (cube, two rings, orbit lines) stays alive behind every section, centred once you leave the hero
@@ -176,7 +176,8 @@ function Shell() {
     ref.current.visible = s > 0.001 && scrollState.decoHide < 0.995
     ref.current.scale.setScalar(4.3 * (1.35 - 0.35 * s)) // contracts into place as it forms
     ref.current.rotation.y = (1 - s) * Math.PI * 0.9
-    mat.current.opacity = intro.shellOpacity * (1 - scrollState.decoHide)
+    // dark lines on a light page need far more opacity than pale lines on a dark one to read the same
+    mat.current.opacity = Math.min(1, intro.shellOpacity * (light ? 9 : 1)) * (1 - scrollState.decoHide)
   })
   return (
     <mesh ref={ref} visible={false}>
@@ -356,7 +357,7 @@ export default function Stage() {
       eventSource={document.documentElement}
       eventPrefix="client"
     >
-      <color attach="background" args={[light ? LIGHT_BG : '#0a0a0c']} />
+      {!light && <color attach="background" args={['#0a0a0c']} />}
       <ambientLight intensity={0.25} />
       <directionalLight position={[4, 5, 5]} intensity={2.2} />
       <directionalLight position={[-5, -2, 3]} intensity={1.2} color="#9fb4ff" />
